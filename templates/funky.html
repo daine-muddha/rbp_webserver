@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block title %}Funksteckdosen{% endblock %}
+{% block pageTitle %}<h4>Funksteckdosen</h4>{% endblock %}
+{% block content %}
+<h4>Entertainment</h4>
+<p>Wohnzimmer: 
+    <a type="button" class="btn btn-success" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='1', turn='on') }}">On</a>
+    <a type="button" class="btn btn-danger" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='1', turn='off') }}">Off</a>
+</p>
+<div class="line"></div>
+<h4>Licht</h4>
+<p>Rattan: 
+    <a type="button" class="btn btn-success" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='2', turn='on') }}">On</a>
+    <a type="button" class="btn btn-danger" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='2', turn='off') }}">Off</a>
+</p>
+<p>Esstisch: 
+    <a type="button" class="btn btn-success" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='4', turn='on') }}">On</a>
+    <a type="button" class="btn btn-danger" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='4', turn='off') }}">Off</a>
+</p>
+{% endblock %}
