@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template, redirect, request, url_for
 from config import Config
-from forms import SocketAssignmentForm
+from forms import SocketAssignmentForm, AudioOutputForm
 from werkzeug.datastructures import MultiDict
 
 import json
@@ -83,9 +83,21 @@ def settings():
 
 	
 
-@app.route('/music')
+@app.route('/music', methods=['GET', 'POST'])
 def music():
-	return render_template('music.html')
+	if request.method == 'GET':
+		volume=20
+		form = AudioOutputForm(audio_output='box')
+		return render_template('music.html', volume=volume, form=form)
+	elif request.method == 'POST':
+		volume = request.form.get('volume', None)
+		if volume is not None:
+			print(volume)
+		audio_output = request.form.get('audio_output', None)
+		if audio_output is not None:
+			print(audio_output)
+
+		return 'OK'
 
 
 if __name__=='__main__':

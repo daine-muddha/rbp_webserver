@@ -15,7 +15,7 @@
 			<p>Lautstärke</p>
 			<div class="d-flex justify-content-left my-4">
 			  <div class="w-75">
-			    <input type="range" class="custom-range" id="customRange11" min="0" max="100" value="3">
+			    <input type="range" class="custom-range" id="volumeRange" min="0" max="100" value="{{ volume }}">
 			  </div>
 			  <span class="font-weight-bold text-dark ml-2 valueSpan2"></span>
 			</div>
@@ -24,14 +24,14 @@
 	<div class="row">
 		<div class="col">
 			<p>Audioausgang</p>
-			<form>
-    			<label class="radio-inline">
-      				<input type="radio" name="optradio" checked>HDMI
-    			</label>
-    			<label class="radio-inline">
-      				<input type="radio" name="optradio">Boxen
-    			</label>
-  			</form>
+			<form id="audioOutputForm">
+				{% for subfield in form.audio_output %}
+				    <tr>
+				        <td>{{ subfield }}</td>
+				        <td>{{ subfield.label }}</td>
+				    </tr>
+				{% endfor %}
+			</form>
 		</div>
 	</div>
 	<div class="line"></div>
@@ -48,12 +48,18 @@
 $(document).ready(function() {
 
   const $valueSpan = $('.valueSpan2');
-  const $value = $('#customRange11');
+  const $value = $('#volumeRange');
   $valueSpan.html($value.val());
   $value.on('input change', () => {
 
     $valueSpan.html($value.val());
   });
+  $value.change(function() {
+  	$.post("/music", {"volume": $(this).val()});
+  })
+  $('#audioOutputForm').change(function() {
+	$.post("/music", {"audio_output": $('input[name=audio_output]:checked', '#audioOutputForm').val()});
+  })
 });
 </script>
 {% endblock %}
