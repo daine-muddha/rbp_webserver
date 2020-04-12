@@ -45,10 +45,10 @@ def funky():
 @app.route('/funky/<string:remote>_<int:socket>_<string:turn>')
 def turn_socket_on_off(remote, socket, turn):
     try: 
-        os.system('rfsniffer play {}.{}{}'.format(remote, socket, turn))
-        return redirect(url_for('/funky'))
+        os.system('rfsniffer play {}.{}{}'.format(remote.lower(), socket, turn))
+        return redirect(url_for('funky'))
     except:
-        return render_template('ooops.html')
+        return redirect(url_for('ooops'))
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
@@ -98,6 +98,10 @@ def music():
 			print(audio_output)
 
 		return 'OK'
+
+@app.route('/ooops')
+def ooops():
+	return render_template('ooops.html')
 
 
 if __name__=='__main__':
