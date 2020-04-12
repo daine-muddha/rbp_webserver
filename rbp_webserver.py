@@ -1,16 +1,18 @@
 from flask import Flask
-from flask import render_template, redirect
+from flask import render_template, redirect, request, url_for
 from config import Config
 from forms import SocketAssignmentForm
+from werkzeug.datastructures import MultiDict
 
 import json
 import os
+import urllib.parse
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
 class Data(object):
-	url = r'C:\Users\danie\Development\rbp_webserver\rbp_webserver\data.json'
+	url = '/home/pi/rbp_webserver/rbp_webserver/data.json'
 
 @app.route('/')
 def index():
@@ -21,16 +23,16 @@ def funky():
 	with open(Data.url) as file:
 		data = json.load(file)
 		categories = dict()
-		for funk in data["funksteckdosen"]:
-			temp_dict = funk["settings"].copy()
-			temp_dict["remote"] = funk["remote"]
-			temp_dict["socket"] = funk["socket"]
-			category = categories.get(funk["settings"]["category"], None)
+		#create dictionary where the keys are the different categories and the value is a list of the dicts containing a socket of this category
+		for funk in data["funksteckdosen"]: 
+			category = categories.get(funk["category"], None)
 			if category is None:
-				categories[funk["settings"]["category"]] = [temp_dict]
+				categories[funk["category"]] = [funk]
 			else:
-				category.append(temp_dict)
-				categories[funk["settings"]["category"]] = category
+				category.append(funk)
+				categories[funk["category"]] = category
+		#convert dictionary to a list where each entry is a dictionary with one key/val pair being the name of this category 
+		#and the other key/val pair being the list of dictionaries for this category (for template)
 		cat_list = list()
 		for key, val in categories.items():
 			temp_dict = dict()
@@ -44,24 +46,47 @@ def funky():
 def turn_socket_on_off(remote, socket, turn):
     try: 
         os.system('rfsniffer play {}.{}{}'.format(remote, socket, turn))
-        return redirect(url_for('funky'))
+        return redirect(url_for('/funky'))
     except:
         return render_template('ooops.html')
 
-@app.route('/settings')
+@app.route('/settings', methods=['GET', 'POST'])
 def settings():
-	with open(Data.url) as file:
-		data = json.load(file)
-		forms = list()
-		for funk in data["funksteckdosen"]:
-			form = SocketAssignmentForm(**funk['settings'], remote=funk["remote"], socket=funk["socket"])
-			forms.append(form)
+	if request.method == 'GET':
+		with open(Data.url) as file:
+			data = json.load(file)
+			forms = list()
+			for funk in data["funksteckdosen"]:
+				form = SocketAssignmentForm(MultiDict(funk))
+				forms.append(form)
+		return render_template('settings.html', forms=forms)
+	elif request.method == 'POST':
+		form_data = request.form['form_data']
+		form_data = form_data.replace('=y&', '=true&')
+		form_data = form_data.split('&formbreak&')
+		form_data = form_data[:-1]
+		json_list = list()
+		for form in form_data:
+			form_dict = urllib.parse.parse_qs(form)
+			form_dict = {key:val[0] for key,val in form_dict.items()}
+			form_obj = SocketAssignmentForm(MultiDict(form_dict))
+			form_obj_data = form_obj.data
+			form_obj_data.pop('csrf_token', None)
+			json_list.append(form_obj_data)
+		with open(Data.url, 'r') as file:
+			data = json.load(file)
+		data["funksteckdosen"] = json_list
+		with open(Data.url, 'w') as file:
+			json.dump(data, file, indent=4)
 
-	return render_template('settings.html', forms=forms)
+		return redirect(url_for('index'))
+
+	
 
 @app.route('/music')
 def music():
 	return render_template('music.html')
+
 
 if __name__=='__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)

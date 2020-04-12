@@ -1,74 +1,68 @@
 {
-	"funksteckdosen": [{
-		"remote": "KYG",
-		"socket": 1,
-		"settings": {
-			"name": "Wohnzimmer",
-			"category": "Entertainment",
-			"timer_switch": 0,
-			"start": "09:00",
-			"end": "17:00",
-			"monday": 0,
-			"tuesday": 0,
-			"wednesday": 0,
-			"thursday": 0,
-			"friday": 0, 
-			"saturday": 0,
-			"sunday": 0
-			}
-	},
-	{
-		"remote": "KYG",
-		"socket": 2,
-		"settings": {
-			"name": "Rattan",
-			"category": "Licht",
-			"timer_switch": 0,
-			"start": "09:00",
-			"end": "17:00",
-			"monday": 0,
-			"tuesday": 0,
-			"wednesday": 0,
-			"thursday": 0,
-			"friday": 0, 
-			"saturday": 0,
-			"sunday": 0
-			}
-	},
-	{
-		"remote": "KYG",
-		"socket": 3,
-		"settings": {
-			"name": "Terrarium",
-			"category": "Licht",
-			"timer_switch": 1,
-			"start": "09:00",
-			"end": "17:00",
-			"monday": 1,
-			"tuesday": 1,
-			"wednesday": 1,
-			"thursday": 1,
-			"friday": 1, 
-			"saturday": 1,
-			"sunday": 1
-		}
-	},
-	{
-		"remote": "KYG",
-		"socket": 4,
-		"settings": {
-			"name": "Esstisch",
-			"category": "Licht",
-			"timer_switch": 0,
-			"start": "09:00",
-			"end": "17:00",
-			"monday": 0,
-			"tuesday": 0,
-			"wednesday": 0,
-			"thursday": 0,
-			"friday": 0, 
-			"saturday": 0,
-			"sunday": 0
-		}
-	}]
+    "funksteckdosen": [
+        {
+            "remote": "KYG",
+            "socket": "1",
+            "name": "Wohnzimmer",
+            "category": "Entertainment",
+            "timer_switch": false,
+            "start": "09:00",
+            "end": "17:30",
+            "monday": false,
+            "tuesday": false,
+            "wednesday": false,
+            "thursday": false,
+            "friday": false,
+            "saturday": false,
+            "sunday": false
+        },
+        {
+            "remote": "KYG",
+            "socket": "2",
+            "name": "Rattan",
+            "category": "Licht",
+            "timer_switch": false,
+            "start": "09:00",
+            "end": "17:00",
+            "monday": false,
+            "tuesday": false,
+            "wednesday": false,
+            "thursday": false,
+            "friday": false,
+            "saturday": false,
+            "sunday": false
+        },
+        {
+            "remote": "KYG",
+            "socket": "4",
+            "name": "Esstisch",
+            "category": "Licht",
+            "timer_switch": false,
+            "start": "09:00",
+            "end": "17:00",
+            "monday": false,
+            "tuesday": false,
+            "wednesday": false,
+            "thursday": false,
+            "friday": false,
+            "saturday": false,
+            "sunday": false
+        },
+        {
+            "remote": "KYG",
+            "socket": "3",
+            "name": "Terrarium",
+            "category": "Licht",
+            "timer_switch": true,
+            "start": "09:00",
+            "end": "17:00",
+            "monday": true,
+            "tuesday": true,
+            "wednesday": true,
+            "thursday": true,
+            "friday": true,
+            "saturday": true,
+            "sunday": true
+        }
+    ]
 }

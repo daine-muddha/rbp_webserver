@@ -11,25 +11,24 @@
 		</div>
 	</div>
 	{% for form in forms %}
-	<form action="" method="post">
+	<form action="" method="post" class="settingsForm">
         {{ form.hidden_tag() }}
         <div class="row">
-
         	<div class="col">
-            	<h6>{{ form.remote }} {{ form.socket }}</h6>
+            	<h6 class="socketData" id="{{ form.remote.data }}+{{ form.socket.data }}">{{ form.remote.data }} {{ form.socket.data }}</h6>
             </div>
         </div>
         <div class="row">
-            <div class="col-4 col-md-3 col-lg-2">
+            <div class="col-4 col-md-2">
         		<p>{{ form.name.label }}:</p>
         	</div>
-        	<div class="col-8 col-sm-6 col-md-4 col-lg-2">
+        	<div class="col-8 col-sm-6 col-md-4">
             	<p>{{ form.name(size=10) }}</p>
             </div>
-            <div class="col-4 col-md-3 col-lg-2">
+            <div class="col-4 col-md-2">
         		<p>{{ form.category.label }}:</p>
         	</div>
-        	<div class="col-8 col-sm-6 col-md-4 col-lg-2">
+        	<div class="col-8 col-sm-6 col-md-4">
             	<p>{{ form.category(size=10) }}</p>
             </div>
         </div>
@@ -78,8 +77,26 @@
 	{% endfor %}
 	<div class="row">
 		<div class="col">
-			<a class="btn btn-dark" type="button" href="#">Speichern</a>
+			<button id="submitButton" class="btn btn-dark" type="button">Speichern</button>
 		</div>
 	</div>
-</div>
+</div>	
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#submitButton").click(function(){
+			var formData= '';
+			$("form").each(function() {
+				var idString= 'id='+$(this).find('.socketData').attr('id')+'&';
+				formData+=idString;
+				formData+=$(this).serialize();
+				formData+='&formbreak&';
+			})
+			$.post("/settings", {"form_data": formData});
+			window.location = "/";
+		})
+	})
+</script>
 {% endblock %}

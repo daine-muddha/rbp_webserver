@@ -1,8 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, SubmitField, IntegerField, SelectMultipleField
+from wtforms import StringField, BooleanField, SubmitField, IntegerField, SelectMultipleField, HiddenField, RadioField
 from wtforms.validators import DataRequired
 
 class SocketAssignmentForm(FlaskForm):
+	remote = HiddenField('Remote')
+	socket = HiddenField('Socket')
 	name = StringField('Name')
 	category = StringField('Kategorie')
 	timer_switch = BooleanField('Zeitschaltuhr')
@@ -16,7 +18,3 @@ class SocketAssignmentForm(FlaskForm):
 	saturday = BooleanField('Sa.')
 	sunday = BooleanField('So.')
 
-	def __init__(self, remote, socket, *args, **kwargs):
-		super(SocketAssignmentForm, self).__init__(*args, **kwargs)
-		self.remote = remote
-		self.socket = socket
