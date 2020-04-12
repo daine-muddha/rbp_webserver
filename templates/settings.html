@@ -6,11 +6,80 @@
 {% block content %}
 <div class="container">
 	<div class="row">
-		<h4>Zeitschaltuhren</h4>
+		<div class="col">
+			<h4>Steckdosenbelegung</h4>
+		</div>
 	</div>
-	<div class="line"></div>
+	{% for form in forms %}
+	<form action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="row">
+
+        	<div class="col">
+            	<h6>{{ form.remote }} {{ form.socket }}</h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-md-3 col-lg-2">
+        		<p>{{ form.name.label }}:</p>
+        	</div>
+        	<div class="col-8 col-sm-6 col-md-4 col-lg-2">
+            	<p>{{ form.name(size=10) }}</p>
+            </div>
+            <div class="col-4 col-md-3 col-lg-2">
+        		<p>{{ form.category.label }}:</p>
+        	</div>
+        	<div class="col-8 col-sm-6 col-md-4 col-lg-2">
+            	<p>{{ form.category(size=10) }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 col-md-3 col-lg-2">
+            	<p>{{ form.timer_switch.label }}:</p>
+            </div>
+            <div class="col-8 col-sm-6 col-md-4 col-lg-2">
+            	<label class="switch">
+				  {{ form.timer_switch }}
+				  <span class="slider round"></span>
+				</label>
+        	</div>
+        	<div class="col-2 col-sm-1">
+        		<p>{{ form.start.label }}:</p>
+        	</div>
+        	<div class="col-3 col-sm-3 col-md-2">
+            	<p>{{ form.start(size=2) }}</p>
+            </div>
+            <div class="col-2 col-sm-1">
+        		<p>{{ form.end.label }}: </p>
+        	</div>
+        	<div class="col-3 col-sm-3 col-md-2">
+            	<p>{{ form.end(size=2) }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+        		<p>{{ form.monday.label }}
+            	{{ form.monday }}
+            	{{ form.tuesday.label }}
+            	{{ form.tuesday }}
+            	{{ form.wednesday.label }}
+            	{{ form.wednesday }}
+            	{{ form.thursday.label }}
+            	{{ form.thursday }}
+            	{{ form.friday.label }}
+            	{{ form.friday }}
+            	{{ form.saturday.label }}
+            	{{ form.saturday }}
+            	{{ form.sunday.label }}
+            	{{ form.sunday }}</p>
+            </div>
+        </div>
+	</form>
+	{% endfor %}
 	<div class="row">
-		<h4>Steckdosenbelegung</h4>
+		<div class="col">
+			<a class="btn btn-dark" type="button" href="#">Speichern</a>
+		</div>
 	</div>
 </div>
 {% endblock %}

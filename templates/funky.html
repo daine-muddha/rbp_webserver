@@ -5,128 +5,25 @@
 {% block pageTitle %}<h4>Funksteckdosen</h4>{% endblock %}
 {% block content %}
 <div class="container">
-	<div class="row">
-		<h4>Entertainment</h4>
-	</div>
-	<div class="row">
-		<div class="col-6 col-sm-4">
-			<p>Wohnzimmer:</p>
+	{% for category in categories %}
+		<div class="row">
+			<h4>{{ category.name }}</h4>
 		</div>
-		<div class="col-6 col-sm-4">
-		    <a type="button" class="btn btn-success" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='1', turn='on') }}">On</a>
-		    <a type="button" class="btn btn-danger" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='1', turn='off') }}">Off</a>
-		</div>
-	</div>
-	<div class="line"></div>
-	<div class="row">
-		<h4>Licht</h4>
-	</div>
-	<div class="row">
-		<div class="col-6 col-sm-4">
-			<p>Rattan:</p>
-		</div>
-		<div class="col-6 col-sm-4">
-		    <a type="button" class="btn btn-success" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='2', turn='on') }}">On</a>
-		    <a type="button" class="btn btn-danger" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='2', turn='off') }}">Off</a>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-6 col-sm-4">
-			<p>Esstisch:</p>
-		</div>
-		<div class="col-6 col-sm-4">
-	    	<a type="button" class="btn btn-success" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='4', turn='on') }}">On</a>
-	    	<a type="button" class="btn btn-danger" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='4', turn='off') }}">Off</a>
-	    </div>
-	</div>
-	<div class="row">
-		<div class="col-6 col-sm-4">
-			<p>Terrarium: </p>
-		</div>
-		<div class="col-6 col-sm-4">
-			<a type="button" class="btn btn-success" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='3', turn='on') }}">On</a>
-	    	<a type="button" class="btn btn-danger" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='3', turn='off') }}">Off</a>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-1"></div>
-		<div class="col-4 col-sm-2">
-			<p>Zeitschaltuhr</p>
-		</div>
-		<div class="col-1"></div>	
-		<div class="col-3  col-sm-2">
-			<label class="switch">
-			  <input type="checkbox">
-			  <span class="slider round"></span>
-			</label>
-		</div>
-		<div class="col-2">
-			<a type="button" class="btn btn-outline-dark" href="{{ url_for('settings') }}"><i class="fas fa-cog"></i></a>
-		</div>
-	</div>
-	<div class="line"></div>
-	<div class="row">
-		<h4>Strom</h4>
-	</div>
-	<div class="row">
-		<div class="col-6 col-sm-4">
-			<p>Mikrowelle:</p>
-		</div>
-		<div class="col-6 col-sm-4">
-		    <a type="button" class="btn btn-success" href="#">On</a>
-		    <a type="button" class="btn btn-danger" href="#">Off</a>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-6 col-sm-4">
-			<p>Tablet: </p>
-		</div>
-		<div class="col-6 col-sm-4">
-			<a type="button" class="btn btn-success" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='3', turn='on') }}">On</a>
-	    	<a type="button" class="btn btn-danger" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='3', turn='off') }}">Off</a>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-1"></div>
-		<div class="col-4 col-sm-2">
-			<p>Zeitschaltuhr</p>
-		</div>
-		<div class="col-1"></div>	
-		<div class="col-3 col-sm-2">
-			<label class="switch">
-			  <input type="checkbox">
-			  <span class="slider round"></span>
-			</label>
-		</div>
-		<div class="col-2">
-			<a type="button" class="btn btn-outline-dark" href="{{ url_for('settings') }}"><i class="fas fa-cog"></i></a>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-6 col-sm-4">
-			<p>Staubsauger: </p>
-		</div>
-		<div class="col-6 col-sm-4">
-			<a type="button" class="btn btn-success" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='3', turn='on') }}">On</a>
-	    	<a type="button" class="btn btn-danger" href="{{ url_for('turn_socket_on_off', remote='kyg', socket='3', turn='off') }}">Off</a>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-1"></div>
-		<div class="col-4 col-sm-2">
-			<p>Zeitschaltuhr</p>
-		</div>
-		<div class="col-1"></div>	
-		<div class="col-3  col-sm-2">
-			<label class="switch">
-			  <input type="checkbox">
-			  <span class="slider round"></span>
-			</label>
-		</div>
-		<div class="col-2">
-			<a type="button" class="btn btn-outline-dark" href="{{ url_for('settings') }}"><i class="fas fa-cog"></i></a>
-		</div>
-	</div>
+		{% for sock in category.sockets %}
+			<div class="row">
+				<div class="col-6 col-sm-4">
+					<p>{{ sock.name }}:</p>
+				</div>
+				<div class="col-6 col-sm-4">
+				    <a type="button" class="btn btn-success" href="{{ url_for('turn_socket_on_off', remote=sock.remote, socket=sock.socket, turn='on') }}">On</a>
+				    <a type="button" class="btn btn-danger" href="{{ url_for('turn_socket_on_off', remote=sock.remote, socket=sock.socket, turn='off') }}">Off</a>
+				</div>
+			</div>
+		{% endfor %}
+		{% if not loop.last %}
+	    	<div class="line"></div>
+		{% endif %}
+	{% endfor %}
 </div>
 
 {% endblock %}
