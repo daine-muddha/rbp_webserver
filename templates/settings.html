@@ -5,98 +5,98 @@
 {% block pageTitle %}<h4>Einstellungen</h4>{% endblock %}
 {% block content %}
 <div class="container">
-	<div class="row">
-		<div class="col">
-			<h4>Steckdosenbelegung</h4>
-		</div>
-	</div>
-	{% for form in forms %}
-	<form action="" method="post" class="settingsForm">
+    <div class="row">
+        <div class="col">
+            <h4>Steckdosenbelegung</h4>
+        </div>
+    </div>
+    {% for form in forms %}
+    <form action="" method="post" class="settingsForm">
         {{ form.hidden_tag() }}
         <div class="row">
-        	<div class="col">
-            	<h6 class="socketData" id="{{ form.remote.data }}+{{ form.socket.data }}">{{ form.remote.data }} {{ form.socket.data }}</h6>
+            <div class="col">
+                <h6 class="socketData" id="{{ form.remote.data }}+{{ form.socket.data }}">{{ form.remote.data }} {{ form.socket.data }}</h6>
             </div>
         </div>
         <div class="row">
             <div class="col-4 col-md-2">
-        		<p>{{ form.name.label }}:</p>
-        	</div>
-        	<div class="col-8 col-sm-6 col-md-4">
-            	<p>{{ form.name(size=10) }}</p>
+                <p>{{ form.name.label }}:</p>
+            </div>
+            <div class="col-8 col-sm-6 col-md-4">
+                <p>{{ form.name(size=10) }}</p>
             </div>
             <div class="col-4 col-md-2">
-        		<p>{{ form.category.label }}:</p>
-        	</div>
-        	<div class="col-8 col-sm-6 col-md-4">
-            	<p>{{ form.category(size=10) }}</p>
+                <p>{{ form.category.label }}:</p>
+            </div>
+            <div class="col-8 col-sm-6 col-md-4">
+                <p>{{ form.category(size=10) }}</p>
             </div>
         </div>
         <div class="row">
             <div class="col-6 col-md-3 col-lg-2">
-            	<p>{{ form.timer_switch.label }}:</p>
+                <p>{{ form.timer_switch.label }}:</p>
             </div>
             <div class="col-6 col-sm-6 col-md-4 col-lg-2">
-            	<div class="custom-control custom-switch">
-			{{ form.timer_switch(class_="custom-control-input", id=form.remote.data+form.socket.data+"switch") }}
-			<label class="custom-control-label" for="{{ form.remote.data }}{{ form.socket.data }}switch"></label>
-        	</div>
-	    </div>
-        	<div class="col-2 col-sm-1">
-        		<p>{{ form.start.label }}:</p>
-        	</div>
-        	<div class="col-4 col-sm-3 col-md-2">
-            	<p>{{ form.start(size=1) }}</p>
+                <div class="custom-control custom-switch">
+            {{ form.timer_switch(class_="custom-control-input", id=form.remote.data+form.socket.data+"switch") }}
+            <label class="custom-control-label" for="{{ form.remote.data }}{{ form.socket.data }}switch"></label>
+            </div>
+        </div>
+            <div class="col-2 col-sm-1">
+                <p>{{ form.start.label }}:</p>
+            </div>
+            <div class="col-4 col-sm-3 col-md-2">
+                <p>{{ form.start(size=1) }}</p>
             </div>
             <div class="col-2 col-sm-1">
-        		<p>{{ form.end.label }}: </p>
-        	</div>
-        	<div class="col-4 col-sm-3 col-md-2">
-            	<p>{{ form.end(size=1) }}</p>
+                <p>{{ form.end.label }}: </p>
+            </div>
+            <div class="col-4 col-sm-3 col-md-2">
+                <p>{{ form.end(size=1) }}</p>
             </div>
         </div>
         <div class="row">
             <div class="col">
-        		<p>{{ form.monday.label }}
-            	{{ form.monday }}
-            	{{ form.tuesday.label }}
-            	{{ form.tuesday }}
-            	{{ form.wednesday.label }}
-            	{{ form.wednesday }}
-            	{{ form.thursday.label }}
-            	{{ form.thursday }}
-            	{{ form.friday.label }}
-            	{{ form.friday }}
-            	{{ form.saturday.label }}
-            	{{ form.saturday }}
-            	{{ form.sunday.label }}
-            	{{ form.sunday }}</p>
+                <p>{{ form.monday.label }}
+                {{ form.monday }}
+                {{ form.tuesday.label }}
+                {{ form.tuesday }}
+                {{ form.wednesday.label }}
+                {{ form.wednesday }}
+                {{ form.thursday.label }}
+                {{ form.thursday }}
+                {{ form.friday.label }}
+                {{ form.friday }}
+                {{ form.saturday.label }}
+                {{ form.saturday }}
+                {{ form.sunday.label }}
+                {{ form.sunday }}</p>
             </div>
         </div>
-	</form>
-	{% endfor %}
-	<div class="row">
-		<div class="col">
-			<button id="submitButton" class="btn btn-dark" type="button">Speichern</button>
-		</div>
-	</div>
-</div>	
+    </form>
+    {% endfor %}
+    <div class="row">
+        <div class="col">
+            <button id="submitButton" class="btn btn-dark" type="button">Speichern</button>
+        </div>
+    </div>
+</div>    
 {% endblock %}
 
 {% block extrajs %}
 <script type="text/javascript">
-	$(document).ready(function () {
-		$("#submitButton").click(function(){
-			var formData= '';
-			$("form").each(function() {
-				var idString= 'id='+$(this).find('.socketData').attr('id')+'&';
-				formData+=idString;
-				formData+=$(this).serialize();
-				formData+='&formbreak&';
-			})
-			$.post("/settings", {"form_data": formData});
-			window.location = "/";
-		})
-	})
+    $(document).ready(function () {
+        $("#submitButton").click(function(){
+            var formData= '';
+            $("form").each(function() {
+                var idString= 'id='+$(this).find('.socketData').attr('id')+'&';
+                formData+=idString;
+                formData+=$(this).serialize();
+                formData+='&formbreak&';
+            })
+            $.post("/settings", {"form_data": formData});
+            window.location = "/";
+        })
+    })
 </script>
 {% endblock %}

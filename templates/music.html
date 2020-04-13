@@ -5,41 +5,41 @@
 {% block pageTitle %}<h4>Musik</h4>{% endblock %}
 {% block content %}
 <div class="container">
-	<div class="row">
-		<div class="col">
-			<h4>Audio</h4>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col">
-			<p>Lautstärke</p>
-			<div class="d-flex justify-content-left my-4">
-			  <div class="w-75">
-			    <input type="range" class="custom-range" id="volumeRange" min="0" max="100" value="{{ volume }}">
-			  </div>
-			  <span class="font-weight-bold text-dark ml-2 valueSpan2"></span>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col">
-			<p>Audioausgang</p>
-			<form id="audioOutputForm">
-				{% for subfield in form.audio_output %}
-				    <tr>
-				        <td>{{ subfield }}</td>
-				        <td>{{ subfield.label }}</td>
-				    </tr>
-				{% endfor %}
-			</form>
-		</div>
-	</div>
-	<div class="line"></div>
-	<div class="row">
-		<div class="col">
-			<h4>Radio</h4>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col">
+            <h4>Audio</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <p>Lautstärke</p>
+            <div class="d-flex justify-content-left my-4">
+              <div class="w-75">
+                <input type="range" class="custom-range" id="volumeRange" min="0" max="100" value="{{ volume }}">
+              </div>
+              <span class="font-weight-bold text-dark ml-2 valueSpan2"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <p>Audioausgang</p>
+            <form id="audioOutputForm">
+                {% for subfield in form.audio_output %}
+                    <tr>
+                        <td>{{ subfield }}</td>
+                        <td>{{ subfield.label }}</td>
+                    </tr>
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+    <div class="line"></div>
+    <div class="row">
+        <div class="col">
+            <h4>Radio</h4>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
@@ -55,10 +55,10 @@ $(document).ready(function() {
     $valueSpan.html($value.val());
   });
   $value.change(function() {
-  	$.post("/music", {"volume": $(this).val()});
+      $.post("/music", {"volume": $(this).val()});
   })
   $('#audioOutputForm').change(function() {
-	$.post("/music", {"audio_output": $('input[name=audio_output]:checked', '#audioOutputForm').val()});
+    $.post("/music", {"audio_output": $('input[name=audio_output]:checked', '#audioOutputForm').val()});
   })
 });
 </script>

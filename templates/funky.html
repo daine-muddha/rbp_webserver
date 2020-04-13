@@ -5,25 +5,36 @@
 {% block pageTitle %}<h4>Funksteckdosen</h4>{% endblock %}
 {% block content %}
 <div class="container">
-	{% for category in categories %}
-		<div class="row">
-			<h4>{{ category.name }}</h4>
-		</div>
-		{% for sock in category.sockets %}
-			<div class="row">
-				<div class="col-6 col-sm-4">
-					<p>{{ sock.name }}:</p>
-				</div>
-				<div class="col-6 col-sm-4">
-				    <a type="button" class="btn btn-success" href="{{ url_for('turn_socket_on_off', remote=sock.remote, socket=sock.socket, turn='on') }}">On</a>
-				    <a type="button" class="btn btn-danger" href="{{ url_for('turn_socket_on_off', remote=sock.remote, socket=sock.socket, turn='off') }}">Off</a>
-				</div>
-			</div>
-		{% endfor %}
-		{% if not loop.last %}
-	    	<div class="line"></div>
-		{% endif %}
-	{% endfor %}
+    {% for category in categories %}
+        <div class="row">
+            <h4>{{ category.name }}</h4>
+        </div>
+        {% for sock in category.sockets %}
+            <div class="row">
+                <div class="col-6 col-sm-4">
+                    <p>{{ sock.name }}:</p>
+                </div>
+                <div class="col-6 col-sm-4">
+                    <button type="button" class="btn btn-success" id="{{ sock.remote }}+{{ sock.socket }}+on" href="#">On</button>
+                    <button type="button" class="btn btn-danger" id="{{ sock.remote }}+{{ sock.socket }}+off" href="#">Off</button>
+                </div>
+            </div>
+        {% endfor %}
+        {% if not loop.last %}
+            <div class="line"></div>
+        {% endif %}
+    {% endfor %}
 </div>
 
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $(document).ready(function () {
+        $('.btn').click(function() {
+            var btnID = $(this).attr('id');
+            $.post("/funky", {'btn_id':btnID});
+        })
+    })
+</script>
 {% endblock %}
