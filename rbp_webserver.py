@@ -1,19 +1,19 @@
 from flask import Flask
 from flask import render_template, redirect, request, url_for
 from config import Config
+from data import Data
 from forms import SocketAssignmentForm, AudioOutputForm
 from py_crontab import update_timer_switches
 from werkzeug.datastructures import MultiDict
 
 import json
 import os
+import subprocess
 import urllib.parse
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-class Data(object):
-    url = '/home/pi/rbp_webserver/rbp_webserver/data.json'
 
 @app.route('/')
 def index():
@@ -91,7 +91,21 @@ def settings():
 def music():
     if request.method == 'GET':
         volume=20
-        form = AudioOutputForm(audio_output='box')
+        #get audio output
+        process = subprocess.Popen(['amixer', 'cget', 'numid=3'], stdout=subprocess.PIPE)
+        stdout = process.communicate()[0].decode('utf-8')
+        audio_out_val_str = stdout.split(':')[-1]
+        search_str = 'values='
+        audio_out_val_ind=val_str.find(search_str)+len(search_str)
+        audio_out_val = int(audio_out_val_str[audio_out_val_ind])
+        audio_output=''
+        if audio_out_val==0:
+            audio_output='auto'
+        elif audio_out_val==1:
+            audio_output='box'
+        elif audio_out_val==2:
+            audio_output='hdmi'
+        form = AudioOutputForm(audio_output=audio_output)
         return render_template('music.html', volume=volume, form=form)
     elif request.method == 'POST':
         volume = request.form.get('volume', None)
@@ -99,9 +113,18 @@ def music():
             print(volume)
         audio_output = request.form.get('audio_output', None)
         if audio_output is not None:
-            print(audio_output)
-
-        return 'OK'
+            if audio_output=='auto':
+                audio_out_val=0
+            elif audio_output=='box':
+                audio_out_val=1
+            elif audio_output=='hdmi':
+                audio_out_val=2
+            try:
+                os.system('amixer cset numid=3 {}'.format(audio_out_val))
+                return 'OK'
+            except:
+                return 'Not OK'
+        
 
 @app.route('/ooops')
 def ooops():

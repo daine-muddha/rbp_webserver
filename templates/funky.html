@@ -15,8 +15,8 @@
                     <p>{{ sock.name }}:</p>
                 </div>
                 <div class="col-6 col-sm-4">
-                    <button type="button" class="btn btn-success" id="{{ sock.remote }}+{{ sock.socket }}+on" href="#">On</button>
-                    <button type="button" class="btn btn-danger" id="{{ sock.remote }}+{{ sock.socket }}+off" href="#">Off</button>
+                    <button type="button" class="btn btn-success btn-socket" id="{{ sock.remote }}+{{ sock.socket }}+on" href="#">On</button>
+                    <button type="button" class="btn btn-danger btn-socket" id="{{ sock.remote }}+{{ sock.socket }}+off" href="#">Off</button>
                 </div>
             </div>
         {% endfor %}
@@ -31,7 +31,7 @@
 {% block extrajs %}
 <script>
     $(document).ready(function () {
-        $('.btn').click(function() {
+        $('.btn-socket').click(function() {
             var btnID = $(this).attr('id');
             $.post("/funky", {'btn_id':btnID});
         })

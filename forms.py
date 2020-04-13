@@ -19,4 +19,4 @@ class SocketAssignmentForm(FlaskForm):
     sunday = BooleanField('So.')
 
 class AudioOutputForm(FlaskForm):
-    audio_output = RadioField(choices=[('hdmi', 'HDMI'), ('box', 'Boxen')])
+    audio_output = RadioField(choices=[('hdmi', 'HDMI'), ('box', 'Boxen'), ('auto', 'Auto')])
