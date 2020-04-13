@@ -51,8 +51,8 @@ def update_timer_switches():
 
     for socket_timer_disabled in socket_timer_disabled_list:
         job_list = cron.find_comment(socket_timer_disabled)
-            for job in job_list:
-                cron.remove(job)
+        for job in job_list:
+            cron.remove(job)
 
     for funk in data["funksteckdosen"]:
         if funk["timer_switch"]==True:
