@@ -124,6 +124,7 @@ def music():
     elif request.method == 'POST':
         volume_scaled = request.form.get('volume', None)
         if volume_scaled is not None:
+            volume_scaled = int(volume_scaled)
             volume = int(((volume_scaled/100)*(max_volume-min_volume))+min_volume)
             volume-=10239
             try:
