@@ -94,7 +94,7 @@ def music():
     max_volume=10639
     if request.method == 'GET':
         #get volume
-        process = subprocess.Popen(['amixer', '-M', '-sget', 'PCM'], stdout=subprocess.PIPE)
+        process = subprocess.Popen(['amixer', '-M', 'sget', 'PCM'], stdout=subprocess.PIPE)
         stdout = process.communicate()[0].decode('utf-8')
         output_split = stdout.split(':')
         volume_str = output_split[-1]
