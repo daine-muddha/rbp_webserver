@@ -94,17 +94,14 @@ def music():
     max_volume=10639
     if request.method == 'GET':
         #get volume
-        process = subprocess.Popen(['amixer', 'cget', 'numid=1'], stdout=subprocess.PIPE)
+        process = subprocess.Popen(['amixer', '-M', '-sget', 'PCM'], stdout=subprocess.PIPE)
         stdout = process.communicate()[0].decode('utf-8')
         output_split = stdout.split(':')
         volume_str = output_split[-1]
-        search_str = 'values='
+        search_str = '['
         volume_start_ind=volume_str.find(search_str)+len(search_str)
-        volume_end_ind = volume_str.find('|')
+        volume_end_ind = volume_str.find('%')
         volume = int(volume_str[volume_start_ind:volume_end_ind])
-        #scale volume
-        volume+=10239
-        volume_scaled = int(100*(volume-min_volume)/(max_volume-min_volume))
         #get audio output
         process = subprocess.Popen(['amixer', 'cget', 'numid=3'], stdout=subprocess.PIPE)
         stdout = process.communicate()[0].decode('utf-8')
@@ -120,15 +117,13 @@ def music():
         elif audio_out_val==2:
             audio_output='hdmi'
         form = AudioOutputForm(audio_output=audio_output)
-        return render_template('music.html', volume=volume_scaled, form=form)
+        return render_template('music.html', volume=volume, form=form)
     elif request.method == 'POST':
-        volume_scaled = request.form.get('volume', None)
-        if volume_scaled is not None:
-            volume_scaled = int(volume_scaled)
-            volume = int(((volume_scaled/100)*(max_volume-min_volume))+min_volume)
-            volume-=10239
+        volume = request.form.get('volume', None)
+        if volume is not None:
             try:
-                os.system('amixer cset numid=1 -- {}'.format(volume))
+                volume= int(volume)
+                os.system('amixer -q -M sset PCM {}%'.format(volume))
                 return 'OK'
             except:
                 return 'Not OK'
