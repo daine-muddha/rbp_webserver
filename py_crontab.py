@@ -4,8 +4,8 @@ import json
 from data import Data
 
 def update_or_create_job(cron, funk, job_id, time_key):
-    job_list = cron.find_comment(job_id)
-    job_list_len = sum(1 for _ in job_list)
+    job_list = list(cron.find_comment(job_id))
+    job_list_len = len(job_list)
     if job_list_len==1:
         job = job_list[0]
     elif (job_list_len>1)|(job_list_len==0):
@@ -50,7 +50,7 @@ def update_timer_switches():
     current_jobs = [job.comment for job in cron]
 
     for socket_timer_disabled in socket_timer_disabled_list:
-        job_list = cron.find_comment(socket_timer_disabled)
+        job_list = list(cron.find_comment(socket_timer_disabled))
         for job in job_list:
             cron.remove(job)
 
