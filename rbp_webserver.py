@@ -49,9 +49,7 @@ def funky():
         btn_id = request.form['btn_id']
         btn_id = btn_id.split('+')
         try:
-            for i in range(3):
-                os.system('rfsniffer play {}.{}{}'.format(btn_id[0].lower(), btn_id[1], btn_id[2]))
-                time.sleep(0.5)
+            os.system('rfsniffer play {}.{}{}'.format(btn_id[0].lower(), btn_id[1], btn_id[2]))
             return 'OK'
         except:
             return redirect(url_for('ooops'))
@@ -125,7 +123,7 @@ def music():
         return render_template('music.html', volume=volume_scaled, form=form)
     elif request.method == 'POST':
         volume_scaled = request.form.get('volume', None)
-        if volume is not None:
+        if volume_scaled is not None:
             volume = int(((volume_scaled/100)*(max_volume-min_volume))+min_volume)
             volume-=10239
             try:
@@ -133,7 +131,7 @@ def music():
                 return 'OK'
             except:
                 return 'Not OK'
-                
+
         audio_output = request.form.get('audio_output', None)
         if audio_output is not None:
             if audio_output=='auto':
