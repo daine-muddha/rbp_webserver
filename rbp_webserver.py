@@ -2,6 +2,7 @@ from flask import Flask
 from flask import render_template, redirect, request, url_for
 from config import Config
 from forms import SocketAssignmentForm, AudioOutputForm
+from py_crontab import update_timer_switches
 from werkzeug.datastructures import MultiDict
 
 import json
@@ -81,7 +82,7 @@ def settings():
         data["funksteckdosen"] = json_list
         with open(Data.url, 'w') as file:
             json.dump(data, file, indent=4)
-
+        update_timer_switches()
         return redirect(url_for('index'))
 
     
