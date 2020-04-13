@@ -96,7 +96,7 @@ def music():
         stdout = process.communicate()[0].decode('utf-8')
         audio_out_val_str = stdout.split(':')[-1]
         search_str = 'values='
-        audio_out_val_ind=val_str.find(search_str)+len(search_str)
+        audio_out_val_ind=audio_out_val_str.find(search_str)+len(search_str)
         audio_out_val = int(audio_out_val_str[audio_out_val_ind])
         audio_output=''
         if audio_out_val==0:
