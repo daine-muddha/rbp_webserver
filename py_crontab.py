@@ -30,7 +30,7 @@ def update_or_create_job(cron, funk, job_id, time_key):
         cron.remove(job)
     else:
         weekdays_str = weekdays_str[:-1]
-        set_all_str = '{} {} {} * *'.format(minute, hour, weekdays_str)
+        set_all_str = '{} {} * * {}'.format(minute, hour, weekdays_str)
         job.setall(set_all_str)
 
     return cron
