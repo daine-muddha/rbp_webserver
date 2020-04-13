@@ -5,9 +5,10 @@ from data import Data
 
 def update_or_create_job(cron, funk, job_id, time_key):
     job_list = cron.find_comment(job_id)
-    if len(job_list)==1:
+    job_list_len = sum(1 for _ in job_list)
+    if job_list_len==1:
         job = job_list[0]
-    elif (len(job_list)>1)|(len(job_list)==0):
+    elif (job_list_len>1)|(job_list_len==0):
         for job in job_list:
             cron.remove(job)
         turn = ''
@@ -50,7 +51,6 @@ def update_timer_switches():
 
     for socket_timer_disabled in socket_timer_disabled_list:
         job_list = cron.find_comment(socket_timer_disabled)
-        if len(job_list)>0:
             for job in job_list:
                 cron.remove(job)
 
