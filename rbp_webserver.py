@@ -4,6 +4,7 @@ from config import Config
 from data import Data
 from forms import SocketAssignmentForm, AudioOutputForm
 from py_crontab import update_timer_switches
+from time import sleep
 from werkzeug.datastructures import MultiDict
 
 import json
@@ -48,7 +49,9 @@ def funky():
         btn_id = request.form['btn_id']
         btn_id = btn_id.split('+')
         try:
-            os.system('rfsniffer play {}.{}{}'.format(btn_id[0].lower(), btn_id[1], btn_id[2]))
+            for i in range(3):
+                os.system('rfsniffer play {}.{}{}'.format(btn_id[0].lower(), btn_id[1], btn_id[2]))
+                time.sleep(0.5)
             return 'OK'
         except:
             return redirect(url_for('ooops'))
@@ -89,8 +92,21 @@ def settings():
 
 @app.route('/music', methods=['GET', 'POST'])
 def music():
+    min_volume=0
+    max_volume=10639
     if request.method == 'GET':
-        volume=20
+        #get volume
+        process = subprocess.Popen(['amixer', 'cget', 'numid=1'], stdout=subprocess.PIPE)
+        stdout = process.communicate()[0].decode('utf-8')
+        output_split = stdout.split(':')
+        volume_str = output_split[-1]
+        search_str = 'values='
+        volume_start_ind=volume_str.find(search_str)+len(search_str)
+        volume_end_ind = volume_str.find('|')
+        volume = int(volume_str[volume_start_ind:volume_end_ind])
+        #scale volume
+        volume+=10239
+        volume_scaled = int(100*(volume-min_volume)/(max_volume-min_volume))
         #get audio output
         process = subprocess.Popen(['amixer', 'cget', 'numid=3'], stdout=subprocess.PIPE)
         stdout = process.communicate()[0].decode('utf-8')
@@ -106,11 +122,18 @@ def music():
         elif audio_out_val==2:
             audio_output='hdmi'
         form = AudioOutputForm(audio_output=audio_output)
-        return render_template('music.html', volume=volume, form=form)
+        return render_template('music.html', volume=volume_scaled, form=form)
     elif request.method == 'POST':
-        volume = request.form.get('volume', None)
+        volume_scaled = request.form.get('volume', None)
         if volume is not None:
-            print(volume)
+            volume = int(((volume_scaled/100)*(max_volume-min_volume))+min_volume)
+            volume-=10239
+            try:
+                os.system('amixer cset numid=1 -- {}'.format(volume))
+                return 'OK'
+            except:
+                return 'Not OK'
+                
         audio_output = request.form.get('audio_output', None)
         if audio_output is not None:
             if audio_output=='auto':
