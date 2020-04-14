@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 {% extends "base.html" %}
 
-{% block title %}Einstellungen{% endblock %}
-{% block pageTitle %}<h4>Einstellungen</h4>{% endblock %}
+{% block title %}Steckdosenbelegung{% endblock %}
+{% block pageTitle %}<h4>Steckdosenbelegung</h4>{% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
@@ -94,7 +94,7 @@
                 formData+=$(this).serialize();
                 formData+='&formbreak&';
             })
-            $.post("/settings", {"form_data": formData});
+            $.post("/settings/sockets", {"form_data": formData});
             window.location = "/";
         })
     })

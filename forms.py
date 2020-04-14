@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, SubmitField, IntegerField, SelectMultipleField, HiddenField, RadioField
+from wtforms.fields.html5 import URLField
+from wtforms import StringField, BooleanField, SubmitField, IntegerField, SelectMultipleField, HiddenField, RadioField, SelectField
 from wtforms.validators import DataRequired
 
 class SocketAssignmentForm(FlaskForm):
@@ -20,3 +21,11 @@ class SocketAssignmentForm(FlaskForm):
 
 class AudioOutputForm(FlaskForm):
     audio_output = RadioField(choices=[('hdmi', 'HDMI'), ('box', 'Boxen'), ('auto', 'Auto')])
+
+
+class RadioSettingsForm(FlaskForm):
+	name = StringField('Name')
+	url = URLField('URL')
+
+class RadioSelectionForm(FlaskForm):
+	radio = SelectField('Name', coerce=str)

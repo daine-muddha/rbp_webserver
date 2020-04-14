@@ -47,27 +47,17 @@
                 <li id="sidebar-music">
                     <a href="{{ url_for('music') }}">Musik</a>
                 </li>
-                <!--- For later, collapsable list item in sidebar
                 <li>
-                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
+                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Einstellungen</a>
                     <ul class="collapse list-unstyled" id="pageSubmenu">
                         <li>
-                            <a href="#">Page 1</a>
+                            <a href="{{ url_for('socket_settings') }}">Steckdosenbelegung</a>
                         </li>
                         <li>
-                            <a href="#">Page 2</a>
-                        </li>
-                        <li>
-                            <a href="#">Page 3</a>
+                            <a href="{{ url_for('radio_settings') }}">Radiosender</a>
                         </li>
                     </ul>
-                </li> -->
-            </ul>
-
-            <ul class="list-unstyled CTAs">
-                <li>
-                    <a href="{{ url_for('settings') }}" class="download"><i class="fas fa-cog"></i>   Einstellungen</a>
-                </li>
+                </li> 
             </ul>
         </nav>
         {% endblock %}

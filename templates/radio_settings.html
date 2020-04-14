@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block title %}Radiosender{% endblock %}
+{% block pageTitle %}<h4>Radiosender</h4>{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h4>Radiosender</h4>
+        </div>
+    </div>
+    {% for form in forms %}
+    <form action="" method="post" class="settingsForm">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="col-2 col-md-2">
+                <p>{{ form.name.label }}:</p>
+            </div>
+            <div class="col-4 col-sm-6 col-md-4">
+                <p>{{ form.name(size=) }}</p>
+            </div>
+            <div class="col-2 col-md-2">
+                <p>{{ form.url.label }}:</p>
+            </div>
+            <div class="col-4 col-sm-6 col-md-4">
+                <p>{{ form.url(size=10) }}</p>
+            </div>
+        </div>
+    </form>
+    {% endfor %}
+    <div class="row">
+        <div class="col">
+            <button id="submitButton" class="btn btn-dark" type="button">Speichern</button>
+        </div>
+    </div>
+</div>    
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#submitButton").click(function(){
+            var formData= '';
+            $("form").each(function() {
+                formData+=$(this).serialize();
+                formData+='&formbreak&';
+            })
+            $.post("/settings/radio", {"form_data": formData});
+            window.location = "/";
+        })
+    })
+</script>
+{% endblock %}
