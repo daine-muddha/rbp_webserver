@@ -108,7 +108,7 @@ def radio_settings():
         for form in form_data:
             form_dict = urllib.parse.parse_qs(form)
             form_dict = {key:val[0] for key,val in form_dict.items()}
-            form_obj = SocketAssignmentForm(MultiDict(form_dict))
+            form_obj = RadioSettingsForm(MultiDict(form_dict))
             form_obj_data = form_obj.data
             form_obj_data.pop('csrf_token', None)
             json_list.append(form_obj_data)
