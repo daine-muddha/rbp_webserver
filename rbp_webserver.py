@@ -16,7 +16,9 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 global radio_playing
+radio_playing = False
 global radio_process
+radio_process = ''
 
 
 @app.route('/')
@@ -100,7 +102,7 @@ def radio_settings():
         if radios is not None:
             for radio in radios:
                 form = RadioSettingsForm(MultiDict(radio))
-                forms.append(radio)
+                forms.append(form)
         return render_template('radio_settings.html', forms=forms)
 
     elif request.method == 'POST':
