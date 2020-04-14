@@ -43,7 +43,7 @@
     <div class="row">
       <div class="col-8">
         <select id="radioSelectionForm">
-          {% for option in radio_selection_form.radio %}
+          {% for option in radio_station_form.radio %}
             {{ option(action= url_list[loop.index0]) }}
           {% endfor %}
         </select>
