@@ -15,11 +15,6 @@ import urllib.parse
 app = Flask(__name__)
 app.config.from_object(Config)
 
-global radio_playing
-radio_playing = False
-global radio_process
-radio_process = ''
-
 
 @app.route('/')
 def index():
@@ -194,24 +189,17 @@ def music():
                 return 'Not OK'
         radio_play = request.form.get('radio_play', None)
         if radio_play is not None:
-            if radio_playing is True:
-                try:
-                    radio_process.terminate()
-                    radio_playing = False
-                except:
-                    pass
             try:
+                os.system('killall vlc')
                 cmd = ['vlc', '--aout', 'alsa', '{}'.format(radio_play)]
                 radio_process = subprocess.Popen(cmd)
-                radio_playing = True
                 return 'OK'
             except:
                 return 'Not OK'
-        radio_storp = request.form.get('radio_stop', None)
+        radio_stop = request.form.get('radio_stop', None)
         if radio_stop is not None:
             try:
-                radio_process.terminate()
-                radio_playing = False
+                os.system('killall vlc')
                 return 'OK'
             except:
                 return 'Not OK'
