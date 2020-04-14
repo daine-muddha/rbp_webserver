@@ -190,7 +190,7 @@ def music():
         radio_play = request.form.get('radio_play', None)
         if radio_play is not None:
             try:
-                os.system('killall cvlc')
+                os.system('killall vlc')
                 cmd = ['cvlc', '--aout', 'alsa', '{}'.format(radio_play)]
                 radio_process = subprocess.Popen(cmd)
                 return 'OK'
@@ -199,7 +199,7 @@ def music():
         radio_stop = request.form.get('radio_stop', None)
         if radio_stop is not None:
             try:
-                os.system('killall cvlc')
+                os.system('killall vlc')
                 return 'OK'
             except:
                 return 'Not OK'
