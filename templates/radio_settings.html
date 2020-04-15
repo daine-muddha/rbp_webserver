@@ -2,7 +2,7 @@
 {% extends "base.html" %}
 
 {% block title %}Radiosender{% endblock %}
-{% block pageTitle %}<h4>Radiosender</h4>{% endblock %}
+{% block pageTitle %}<h4>Einstellungen</h4>{% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
@@ -14,23 +14,24 @@
     <form action="" method="post" class="settingsForm">
         {{ form.hidden_tag() }}
         <div class="row">
-            <div class="col-2 col-md-2">
+            <div class="col-4 col-md-2">
                 <p>{{ form.name.label }}:</p>
             </div>
-            <div class="col-4 col-sm-6 col-md-4">
-                <p>{{ form.name(size=3) }}</p>
+            <div class="col-8 col-sm-6 col-md-4">
+                <p>{{ form.name(size=3  ) }}</p>
             </div>
-            <div class="col-2 col-md-2">
+            <div class="col-4 col-md-2">
                 <p>{{ form.url.label }}:</p>
             </div>
-            <div class="col-4 col-sm-6 col-md-4">
+            <div class="col-8 col-sm-6 col-md-4">
                 <p>{{ form.url(size=10) }}</p>
             </div>
         </div>
     </form>
     {% endfor %}
-    <div class="row">
+    <div class="row btn-row">
         <div class="col">
+            <button id="addButton" class="btn btn-outline-dark" type="button">Hinzufügen</button>
             <button id="submitButton" class="btn btn-dark" type="button">Speichern</button>
         </div>
     </div>
@@ -48,7 +49,12 @@
             })
             $.post("/settings/radio", {"form_data": formData});
             window.location = "/";
-        })
+        });
+        $('#addButton').click(function() {
+            $.post( "/settings/radio", {"add_form": true}, function( data ) {
+                $( ".btn-row" ).before( data );
+            });
+        });
     })
 </script>
 {% endblock %}

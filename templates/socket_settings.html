@@ -2,7 +2,7 @@
 {% extends "base.html" %}
 
 {% block title %}Steckdosenbelegung{% endblock %}
-{% block pageTitle %}<h4>Steckdosenbelegung</h4>{% endblock %}
+{% block pageTitle %}<h4>Einstellungen</h4>{% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
@@ -19,17 +19,17 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-4 col-md-2">
+            <div class="col-6 col-md-2">
                 <p>{{ form.name.label }}:</p>
             </div>
-            <div class="col-8 col-sm-6 col-md-4">
-                <p>{{ form.name(size=10) }}</p>
+            <div class="col-6 col-sm-6 col-md-4">
+                <p>{{ form.name(size=6) }}</p>
             </div>
-            <div class="col-4 col-md-2">
+            <div class="col-6 col-md-2">
                 <p>{{ form.category.label }}:</p>
             </div>
-            <div class="col-8 col-sm-6 col-md-4">
-                <p>{{ form.category(size=10) }}</p>
+            <div class="col-6 col-sm-6 col-md-4">
+                <p>{{ form.category(size=6) }}</p>
             </div>
         </div>
         <div class="row">
@@ -42,16 +42,16 @@
             <label class="custom-control-label" for="{{ form.remote.data }}{{ form.socket.data }}switch"></label>
             </div>
         </div>
-            <div class="col-2 col-sm-1">
+            <div class="col-3 col-sm-1">
                 <p>{{ form.start.label }}:</p>
             </div>
-            <div class="col-4 col-sm-3 col-md-2">
+            <div class="col-3 col-sm-3 col-md-2">
                 <p>{{ form.start(size=1) }}</p>
             </div>
-            <div class="col-2 col-sm-1">
+            <div class="col-3 col-sm-1">
                 <p>{{ form.end.label }}: </p>
             </div>
-            <div class="col-4 col-sm-3 col-md-2">
+            <div class="col-3 col-sm-3 col-md-2">
                 <p>{{ form.end(size=1) }}</p>
             </div>
         </div>

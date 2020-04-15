@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template, redirect, request, url_for
+from flask import render_template, redirect, request, url_for, render_template_string
 from config import Config
 from data import Data
 from forms import SocketAssignmentForm, AudioOutputForm, RadioSettingsForm, RadioSelectionForm
@@ -101,23 +101,30 @@ def radio_settings():
         return render_template('radio_settings.html', forms=forms)
 
     elif request.method == 'POST':
-        form_data = request.form['form_data']
-        form_data = form_data.split('&formbreak&')
-        form_data = form_data[:-1]
-        json_list = list()
-        for form in form_data:
-            form_dict = urllib.parse.parse_qs(form)
-            form_dict = {key:val[0] for key,val in form_dict.items()}
-            form_obj = RadioSettingsForm(MultiDict(form_dict))
-            form_obj_data = form_obj.data
-            form_obj_data.pop('csrf_token', None)
-            json_list.append(form_obj_data)
-        with open(Data.url, 'r') as file:
-            data = json.load(file)
-        data["radios"] = json_list
-        with open(Data.url, 'w') as file:
-            json.dump(data, file, indent=4)
-        return redirect(url_for('index'))
+        form_data = request.form.get('form_data', None)
+        if form_data is not None:
+            form_data = form_data.split('&formbreak&')
+            form_data = form_data[:-1]
+            json_list = list()
+            for form in form_data:
+                form_dict = urllib.parse.parse_qs(form)
+                form_dict = {key:val[0] for key,val in form_dict.items()}
+                form_obj = RadioSettingsForm(MultiDict(form_dict))
+                form_obj_data = form_obj.data
+                form_obj_data.pop('csrf_token', None)
+                json_list.append(form_obj_data)
+            with open(Data.url, 'r') as file:
+                data = json.load(file)
+            data["radios"] = json_list
+            with open(Data.url, 'w') as file:
+                json.dump(data, file, indent=4)
+            return redirect(url_for('index'))
+        add_form = request.form.get('add_form', None)
+        if add_form is not None:
+            form = RadioSettingsForm()
+            data = render_template_string('radio_settings_form.html', form=form)
+            return data
+
 
 @app.route('/music', methods=['GET', 'POST'])
 def music():

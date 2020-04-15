@@ -1,0 +1,17 @@
+<form action="" method="post" class="settingsForm">
+    {{ form.hidden_tag() }}
+    <div class="row">
+        <div class="col-4 col-md-2">
+            <p>{{ form.name.label }}:</p>
+        </div>
+        <div class="col-8 col-sm-6 col-md-4">
+            <p>{{ form.name(size=3  ) }}</p>
+        </div>
+        <div class="col-4 col-md-2">
+            <p>{{ form.url.label }}:</p>
+        </div>
+        <div class="col-8 col-sm-6 col-md-4">
+            <p>{{ form.url(size=10) }}</p>
+        </div>
+    </div>
+</form>
