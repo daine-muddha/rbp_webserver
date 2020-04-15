@@ -122,7 +122,7 @@ def radio_settings():
         add_form = request.form.get('add_form', None)
         if add_form is not None:
             form = RadioSettingsForm()
-            data = render_template_string('radio_settings_form.html', form=form)
+            data = render_template('radio_settings_form.html', form=form)
             return data
 
 
