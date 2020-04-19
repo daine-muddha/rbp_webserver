@@ -11,25 +11,21 @@
         </div>
     </div>
     {% for form in forms %}
-    <form action="" method="post" class="settingsForm">
+    <form action="" method="post" class="settingsForm mt-3">
         {{ form.hidden_tag() }}
-        <div class="row">
-            <div class="col-4 col-md-2">
-                <p>{{ form.name.label }}:</p>
+        <div class="form-row">
+            <div class="form-group col-12 col-md-4">
+                {{ form.name.label }}:
+                {{ form.name(class="form-control") }}
             </div>
-            <div class="col-8 col-sm-6 col-md-4">
-                <p>{{ form.name(size=3  ) }}</p>
-            </div>
-            <div class="col-4 col-md-2">
-                <p>{{ form.url.label }}:</p>
-            </div>
-            <div class="col-8 col-sm-6 col-md-4">
-                <p>{{ form.url(size=10) }}</p>
+            <div class="form-group col-12 col-md-8">
+                {{ form.url.label }}:
+                {{ form.url(class="form-control") }}
             </div>
         </div>
     </form>
     {% endfor %}
-    <div class="row btn-row">
+    <div class="row btn-row mt-3">
         <div class="col">
             <button id="addButton" class="btn btn-outline-dark" type="button">Hinzufügen</button>
             <button id="submitButton" class="btn btn-dark" type="button">Speichern</button>

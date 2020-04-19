@@ -26,10 +26,10 @@
             <p>Audioausgang</p>
             <form id="audioOutputForm">
                 {% for subfield in audio_output_form.audio_output %}
-                    <tr>
-                        <td>{{ subfield }}</td>
-                        <td>{{ subfield.label }}</td>
-                    </tr>
+                  <div class="form-check form-check-inline">
+                    {{ subfield(class="form-check-input") }}
+                    {{ subfield.label(class="form-check-label") }}
+                  </div>
                 {% endfor %}
             </form>
         </div>
@@ -42,11 +42,13 @@
     </div>
     <div class="row">
       <div class="col">
-        <select id="radioSelectionForm">
-          {% for option in radio_station_form.radio %}
-            {{ option(action= url_list[loop.index0]) }}
-          {% endfor %}
-        </select>
+        <div class="form-group">
+          <select id="radioSelectionForm" class="form-control">
+            {% for option in radio_station_form.radio %}
+              {{ option(action= url_list[loop.index0]) }}
+            {% endfor %}
+          </select>
+        </div>
       </div>
     </div>
     <div class="row mt-1">
