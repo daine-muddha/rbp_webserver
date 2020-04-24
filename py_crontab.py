@@ -14,22 +14,27 @@ def update_or_create_job(cron, funk, job_id, time_key):
         turn = ''
         if time_key=='start':
             turn='on'
-        elif time_key=='end':
+        elif (time_key=='end') | (time_key=='auto_off_at'):
             turn='off'
         command_str = 'sh /home/pi/activate_timer_switch.sh {}.{}{}'.format(funk["remote"].lower(), funk["socket"], turn)
         job = cron.new(command=command_str, comment=job_id)
     times = funk[time_key].split(':')
     hour = int(times[0])
     minute = int(times[1])
-    weekdays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
     weekdays_str = ''
-    for i in range(len(weekdays)):
-        if funk[weekdays[i]]==True:
-            weekdays_str+='{},'.format(i)
+    if time_key in ['start', 'end']:
+        weekdays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+        weekdays_str = ''
+        for i in range(len(weekdays)):
+            if funk[weekdays[i]]==True:
+                weekdays_str+='{},'.format(i)
+    elif time_key == 'auto_off_at':
+        weekdays_str='*'
     if len(weekdays_str)==0:
         cron.remove(job)
     else:
-        weekdays_str = weekdays_str[:-1]
+        if time_key != 'auto_off_at':
+            weekdays_str = weekdays_str[:-1]
         set_all_str = '{} {} * * {}'.format(minute, hour, weekdays_str)
         job.setall(set_all_str)
 
@@ -60,6 +65,9 @@ def update_timer_switches():
             socket_timer_off = 'socket_{}{}_off'.format(funk["remote"], funk["socket"])
             cron = update_or_create_job(cron, funk, socket_timer_on, 'start')
             cron = update_or_create_job(cron, funk, socket_timer_off, 'end')
+        elif funk["auto_off"]==True:
+            socket_timer_auto_off = 'socket_{}{}_auto_off'.format(funk["remote"], funk["socket"])
+            cron = update_or_create_job(cron, funk, socket_timer_auto_off, 'auto_off_at')
 
     cron.write()
 
