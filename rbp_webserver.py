@@ -211,7 +211,26 @@ def music():
             except:
                 return 'Not OK'
 
-        
+@app.route('/settings/power', methods=['GET', 'POST'])
+def raspbi_power():
+    if request.method == 'GET':
+        return render_template('raspbi_power.html')
+    elif request.method == 'POST':
+        btn_id = request.form.get('btn_id', None)
+        if btn_id == 'powerBtn':
+            try:
+                os.system('sudo poweroff')
+                return 'OK'
+            except:
+                return 'Not OK'
+        elif btn_id == 'rebootBtn':
+            try:
+                os.system('sudo reboot')
+                return 'OK'
+            except:
+                return 'Not OK'
+        else:
+            return 'Not OK'
 
 @app.route('/ooops')
 def ooops():

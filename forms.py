@@ -9,8 +9,8 @@ class SocketAssignmentForm(FlaskForm):
     name = StringField('Name')
     category = StringField('Kategorie')
     timer_switch = BooleanField('Zeitschaltuhr')
-    start = StringField('Von')
-    end = StringField('Bis')
+    start = StringField('Von', render_kw={"placeholder": "hh:mm"})
+    end = StringField('Bis', render_kw={"placeholder": "hh:mm"})
     monday = BooleanField('Mo.')
     tuesday = BooleanField('Di.')
     wednesday = BooleanField('Mi.')
@@ -19,7 +19,7 @@ class SocketAssignmentForm(FlaskForm):
     saturday = BooleanField('Sa.')
     sunday = BooleanField('So.')
     auto_off = BooleanField('Auto Off')
-    auto_off_at = StringField('Um')
+    auto_off_at = StringField('Um', render_kw={"placeholder": "hh:mm"})
 
 class AudioOutputForm(FlaskForm):
     audio_output = RadioField(choices=[('hdmi', 'HDMI'), ('box', 'Boxen'), ('auto', 'Auto')])

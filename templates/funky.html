@@ -22,6 +22,9 @@
                 </div>
             </div>
         {% endfor %}
+        {% if not loop.last %}
+        <div class="line mt-2 mb-2"></div>
+        {% endif %}
     {% endfor %}
 </div>
 
