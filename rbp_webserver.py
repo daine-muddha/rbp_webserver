@@ -217,6 +217,10 @@ def music():
                     asound_content = asound_content.replace(pcm_output, pcm_output_card)
                     with open('/home/pi/.asoundrc', 'w') as file:
                         file.write(asound_content)
+                    try:
+                        os.system('sudo service raspotify restart')
+                    except:
+                        pass
                 try:
                     os.system('amixer cset numid=3 {}'.format(audio_out_val))
                     return 'OK'
@@ -229,7 +233,7 @@ def music():
                     bt_mac = '2C:41:A1:2D:C7:51'
                 pcm_new_output = pcm_output_bt.replace('[MAC]', bt_mac)
                 try:
-                    os.system('btaudio-connect "{}"'.format(bt_mac))
+                    os.system('echo -e "connect {}\nquit" | sudo bluetoothctl'.format(bt_mac))
                     with open('/home/pi/.asoundrc', 'r') as file:
                         asound_content = file.read()
                     pcm_output = re.search('(?s)(?<=pcm.output )(.*?)(\})', asound_content).group()
