@@ -224,7 +224,7 @@ def music():
             else:
                 if audio_output=='bt_anker':
                     pcm_new_output = pcm_output_anker
-                elif audio_output='bt_bose':
+                elif audio_output=='bt_bose':
                     pcm_new_output = pcm_output_bose
                 with open('/home/pi/.asoundrc', 'r') as file:
                     asound_content = file.read()
@@ -237,7 +237,7 @@ def music():
                 except:
                     pass
                 return 'OK'
-                
+
         radio_play = request.form.get('radio_play', None)
         if radio_play is not None:
             try:
