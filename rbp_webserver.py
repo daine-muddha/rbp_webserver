@@ -229,7 +229,7 @@ def music():
                 with open('/home/pi/.asoundrc', 'r') as file:
                     asound_content = file.read()
                 pcm_output = re.search('(?s)(?<=pcm.output )(.*?)(\})', asound_content).group()
-                asound_content = asound_content.replace(pcm_new_output, pcm_new_output)
+                asound_content = asound_content.replace(pcm_output, pcm_new_output)
                 with open('/home/pi/.asoundrc', 'w') as file:
                     file.write(asound_content)
                 try:
