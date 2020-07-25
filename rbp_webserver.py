@@ -11,6 +11,7 @@ import json
 import os
 import re
 import subprocess
+import time
 import urllib.parse
 
 app = Flask(__name__)
@@ -131,8 +132,7 @@ def radio_settings():
 def music():
     min_volume=0
     max_volume=10639
-    pcm_output_bose = '{\n\ttype bluealsa\n\tdevice "2C:41:A1:2D:C7:51"\n\tprofile "a2dp"\n}'
-    pcm_output_anker = '{\n\ttype bluealsa\n\tdevice "00:E0:4C:7E:46:38"\n\tprofile "a2dp"\n}'
+    pcm_output_bt = '{\n\ttype bluealsa\n\tdevice "[MAC]"\n\tprofile "a2dp"\n}'
     pcm_output_card = '{\n\ttype hw\n\tcard 0\n}'
     if request.method == 'GET':
         #get audio output
@@ -141,14 +141,14 @@ def music():
         audio_out_val_str = stdout.split(':')[-1]
         search_str = 'values='
         audio_out_val_ind=audio_out_val_str.find(search_str)+len(search_str)
-        audio_out_val = int(audio_out_val_str[audio_out_val_ind])
+        audio_out_val = audio_out_val_str[audio_out_val_ind]
         audio_output=''
         alsa_scontrol = 'PCM'
-        if audio_out_val==0:
+        if audio_out_val=='0':
             audio_output='auto'
-        elif audio_out_val==1:
+        elif audio_out_val=='1':
             audio_output='box'
-        elif audio_out_val==2:
+        elif audio_out_val=='2':
             audio_output='hdmi'
         else:
             output_info = stdout.split(':')[0]
@@ -213,7 +213,7 @@ def music():
                     audio_out_val=1
                 elif audio_output=='hdmi':
                     audio_out_val=2
-                if 'type hw' not in pcm_output:
+                if pcm_output != pcm_output_card:
                     asound_content = asound_content.replace(pcm_output, pcm_output_card)
                     with open('/home/pi/.asoundrc', 'w') as file:
                         file.write(asound_content)
@@ -224,20 +224,25 @@ def music():
                     return 'Not OK'
             else:
                 if audio_output=='bt_anker':
-                    pcm_new_output = pcm_output_anker
+                    bt_mac = '00:E0:4C:7E:46:38'
                 elif audio_output=='bt_bose':
-                    pcm_new_output = pcm_output_bose
-                with open('/home/pi/.asoundrc', 'r') as file:
-                    asound_content = file.read()
-                pcm_output = re.search('(?s)(?<=pcm.output )(.*?)(\})', asound_content).group()
-                asound_content = asound_content.replace(pcm_output, pcm_new_output)
-                with open('/home/pi/.asoundrc', 'w') as file:
-                    file.write(asound_content)
+                    bt_mac = '2C:41:A1:2D:C7:51'
+                pcm_new_output = pcm_output_bt.replace('[MAC]', bt_mac)
                 try:
-                    os.system('sudo service raspotify restart')
+                    os.system('btaudio-connect "{}"'.format(bt_mac))
+                    with open('/home/pi/.asoundrc', 'r') as file:
+                        asound_content = file.read()
+                    pcm_output = re.search('(?s)(?<=pcm.output )(.*?)(\})', asound_content).group()
+                    asound_content = asound_content.replace(pcm_output, pcm_new_output)
+                    with open('/home/pi/.asoundrc', 'w') as file:
+                        file.write(asound_content)
+                    try:
+                        os.system('sudo service raspotify restart')
+                    except:
+                        pass
+                    return 'OK'
                 except:
-                    pass
-                return 'OK'
+                    return 'Not OK'
 
         radio_play = request.form.get('radio_play', None)
         if radio_play is not None:
