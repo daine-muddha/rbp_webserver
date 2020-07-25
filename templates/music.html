@@ -15,7 +15,13 @@
             <p>Lautstärke</p>
             <div class="d-flex justify-content-left my-4">
               <div class="w-75">
+                {% if volume == 'Error'}
+                <input type="range" class="custom-range" id="volumeRange" min="0" max="100" value="{{ volume }}" disabled>
+                <p>Fehler beim Laden der Lautstärke, stelle Audio-Ausgang auf 'auto' oder 'Boxen' und lade die Seite neu</p>
+                {% else %}
                 <input type="range" class="custom-range" id="volumeRange" min="0" max="100" value="{{ volume }}">
+                {% endif %}
+                }
               </div>
               <span class="font-weight-bold text-dark ml-2 valueSpan2"></span>
             </div>

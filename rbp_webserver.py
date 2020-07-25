@@ -133,6 +133,7 @@ def music():
     min_volume=0
     max_volume=10639
     pcm_output_bt = '{\n\ttype bluealsa\n\tdevice "[MAC]"\n\tprofile "a2dp"\n}'
+    ctl_default_bt = '{\n\ttype bluealsa\n}'
     pcm_output_card = '{\n\ttype hw\n\tcard 0\n}'
     if request.method == 'GET':
         #get audio output
@@ -167,7 +168,10 @@ def music():
         search_str = '['
         volume_start_ind=volume_str.find(search_str)+len(search_str)
         volume_end_ind = volume_str.find('%')
-        volume = int(volume_str[volume_start_ind:volume_end_ind])
+        try:
+            volume = int(volume_str[volume_start_ind:volume_end_ind])
+        except:
+            volume = 'Error'
         #get radio stations
         with open(Data.url) as file:
             data = json.load(file)
@@ -206,6 +210,7 @@ def music():
             with open('/home/pi/.asoundrc', 'r') as file:
                 asound_content = file.read()
             pcm_output = re.search('(?s)(?<=pcm.output )(.*?)(\})', asound_content).group()
+            ctl_default = re.search('(?s)(?<=ctl.!default )(.*?)(\})', asound_content).group()
             if audio_output in ['auto', 'box', 'hdmi']:
                 if audio_output=='auto':
                     audio_out_val=0
@@ -215,10 +220,12 @@ def music():
                     audio_out_val=2
                 if pcm_output != pcm_output_card:
                     asound_content = asound_content.replace(pcm_output, pcm_output_card)
+                    asound_content = asound_content.replace(ctl_default, pcm_output_card)
                     with open('/home/pi/.asoundrc', 'w') as file:
                         file.write(asound_content)
                     try:
                         os.system('sudo service raspotify restart')
+                        os.system('killall vlc')
                     except:
                         pass
                 try:
@@ -237,11 +244,15 @@ def music():
                     with open('/home/pi/.asoundrc', 'r') as file:
                         asound_content = file.read()
                     pcm_output = re.search('(?s)(?<=pcm.output )(.*?)(\})', asound_content).group()
+                    ctl_default = re.search('(?s)(?<=ctl.!default )(.*?)(\})', asound_content).group()
                     asound_content = asound_content.replace(pcm_output, pcm_new_output)
+                    if ctl_default!=ctl_default_bt:
+                        asound_content = asound_content.replace(ctl_default, ctl_default_bt)
                     with open('/home/pi/.asoundrc', 'w') as file:
                         file.write(asound_content)
                     try:
                         os.system('sudo service raspotify restart')
+                        os.system('killall vlc')
                     except:
                         pass
                     return 'OK'
