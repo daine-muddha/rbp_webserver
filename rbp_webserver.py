@@ -154,7 +154,7 @@ def music():
             output_info = stdout.split(':')[0]
             if 'SoundCore mini' in output_info:
                 audio_output =  'bt_anker'
-                alsa_scontrol = '"SoundCore mini(ATT) - A2DP"'
+                alsa_scontrol = '"SoundCore mini - A2DP"'
             elif 'LE-Bose Micro SoundLin' in output_info:
                 audio_output = 'bt_bose'
                 alsa_scontrol =  '"LE-Bose Micro SoundLi - A2DP"'
