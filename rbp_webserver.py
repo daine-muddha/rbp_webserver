@@ -130,16 +130,10 @@ def radio_settings():
 def music():
     min_volume=0
     max_volume=10639
+    pcm_output_bose = '{\n\ttype bluealsa\n\tdevice "2C:41:A1:2D:C7:51"\n\tprofile "a2dp"\n}'
+    pcm_output_anker = '{\n\ttype bluealsa\n\tdevice "00:E0:4C:7E:46:38"\n\tprofile "a2dp"\n}'
+    pcm_output_card = '{\n\ttype hw\n\tcard 0\n}'
     if request.method == 'GET':
-        #get volume
-        process = subprocess.Popen(['amixer', '-M', 'sget', 'PCM'], stdout=subprocess.PIPE)
-        stdout = process.communicate()[0].decode('utf-8')
-        output_split = stdout.split(':')
-        volume_str = output_split[-1]
-        search_str = '['
-        volume_start_ind=volume_str.find(search_str)+len(search_str)
-        volume_end_ind = volume_str.find('%')
-        volume = int(volume_str[volume_start_ind:volume_end_ind])
         #get audio output
         process = subprocess.Popen(['amixer', 'cget', 'numid=3'], stdout=subprocess.PIPE)
         stdout = process.communicate()[0].decode('utf-8')
@@ -148,13 +142,31 @@ def music():
         audio_out_val_ind=audio_out_val_str.find(search_str)+len(search_str)
         audio_out_val = int(audio_out_val_str[audio_out_val_ind])
         audio_output=''
+        alsa_scontrol = 'PCM'
         if audio_out_val==0:
             audio_output='auto'
         elif audio_out_val==1:
             audio_output='box'
         elif audio_out_val==2:
             audio_output='hdmi'
+        else:
+            output_info = stdout.split(':')[0]
+            if 'SoundCore mini' in output_info:
+                audio_output =  'bt_anker'
+                alsa_scontrol = '"SoundCore mini(ATT) - A2DP"'
+            elif 'LE-Bose Micro SoundLin' in output_info:
+                audio_output = 'bt_bose'
+                alsa_scontrol =  '"LE-Bose Micro SoundLi - A2DP"'
         audio_output_form = AudioOutputForm(audio_output=audio_output)
+        #get volume
+        process = subprocess.Popen(['amixer', '-M', 'sget', alsa_scontrol], stdout=subprocess.PIPE)
+        stdout = process.communicate()[0].decode('utf-8')
+        output_split = stdout.split(':')
+        volume_str = output_split[-1]
+        search_str = '['
+        volume_start_ind=volume_str.find(search_str)+len(search_str)
+        volume_end_ind = volume_str.find('%')
+        volume = int(volume_str[volume_start_ind:volume_end_ind])
         #get radio stations
         with open(Data.url) as file:
             data = json.load(file)
@@ -173,27 +185,59 @@ def music():
         return render_template('music.html', volume=volume, audio_output_form=audio_output_form, radio_station_form=radio_station_form, url_list=url_list)
     elif request.method == 'POST':
         volume = request.form.get('volume', None)
+        audio_output = request.form.get('audio_output', None)
         if volume is not None:
+            if audio_output in ['auto', 'box', 'hdmi']:
+                alsa_scontrol='PCM'
+            elif audio_output == 'bt_anker':
+                alsa_scontrol = '"SoundCore mini(ATT) - A2DP"'
+            elif audio_output == 'bt_bose':
+                alsa_scontrol =  '"LE-Bose Micro SoundLi - A2DP"'
             try:
                 volume= int(volume)
-                os.system('amixer -q -M sset PCM {}%'.format(volume))
+                os.system('amixer -q -M sset {} {}%'.format(alsa_scontrol, volume))
                 return 'OK'
             except:
                 return 'Not OK'
 
-        audio_output = request.form.get('audio_output', None)
+        
         if audio_output is not None:
-            if audio_output=='auto':
-                audio_out_val=0
-            elif audio_output=='box':
-                audio_out_val=1
-            elif audio_output=='hdmi':
-                audio_out_val=2
-            try:
-                os.system('amixer cset numid=3 {}'.format(audio_out_val))
+            with open('/home/pi/.asoundrc', 'r') as file:
+                asound_content = file.read()
+            pcm_output = re.search('(?s)(?<=pcm.output )(.*?)(\})', asound_content).group()
+            if audio_output in ['auto', 'box', 'hdmi']:
+                if audio_output=='auto':
+                    audio_out_val=0
+                elif audio_output=='box':
+                    audio_out_val=1
+                elif audio_output=='hdmi':
+                    audio_out_val=2
+                if 'type hw' not in pcm_output:
+                    asound_content = asound_content.replace(pcm_output, pcm_output_card)
+                    with open('/home/pi/.asoundrc', 'w') as file:
+                        file.write(asound_content)
+                try:
+                    os.system('amixer cset numid=3 {}'.format(audio_out_val))
+                    return 'OK'
+                except:
+                    return 'Not OK'
+            else:
+                if audio_output=='bt_anker':
+                    pcm_new_output = pcm_output_anker
+                elif audio_output='bt_bose':
+                    pcm_new_output = pcm_output_bose
+                with open('/home/pi/.asoundrc', 'r') as file:
+                    asound_content = file.read()
+                pcm_output = re.search('(?s)(?<=pcm.output )(.*?)(\})', asound_content).group()
+                asound_content = asound_content.replace(pcm_new_output, pcm_new_output)
+                with open('/home/pi/.asoundrc', 'w') as file:
+                    file.write(asound_content)
+                try:
+                    os.system('sudo service raspotify restart')
+                except:
+                    pass
                 return 'OK'
-            except:
-                return 'Not OK'
+                
         radio_play = request.form.get('radio_play', None)
         if radio_play is not None:
             try:

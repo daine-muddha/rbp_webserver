@@ -72,7 +72,7 @@ $(document).ready(function() {
     $valueSpan.html($value.val());
   });
   $value.change(function() {
-      $.post("/music", {"volume": $(this).val()});
+      $.post("/music", {"volume": $(this).val(), "audio_output": $('input[name=audio_output]:checked', '#audioOutputForm').val()});
   })
   $('#audioOutputForm').change(function() {
     $.post("/music", {"audio_output": $('input[name=audio_output]:checked', '#audioOutputForm').val()});

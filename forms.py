@@ -22,7 +22,7 @@ class SocketAssignmentForm(FlaskForm):
     auto_off_at = StringField('Um', render_kw={"placeholder": "hh:mm"})
 
 class AudioOutputForm(FlaskForm):
-    audio_output = RadioField(choices=[('hdmi', 'HDMI'), ('box', 'Boxen'), ('auto', 'Auto')])
+    audio_output = RadioField(choices=[('hdmi', 'HDMI'), ('box', 'Boxen'), ('auto', 'Auto'), ('bt_bose', 'BT Bose'), ('bt_anker', 'BT Anker')])
 
 
 class RadioSettingsForm(FlaskForm):
