@@ -28,12 +28,11 @@
     </div>
     <div class="row">
         <div class="col">
-          <p>{{ bt_cons[0] }}</p>
             <p>Audioausgang</p>
             <form id="audioOutputForm">
                 {% for subfield in audio_output_form.audio_output %}
                   <div class="form-check form-check-inline">
-                    {% if ((subfield.label.text == 'BT Anker') and (bt_cons[0] == false)) or ((subfield.label.text == 'BT Bose') and (bt_cons[1] == false)) %}
+                    {% if ((subfield.label.text == 'BT Anker') and (bt_cons[0] == False)) or ((subfield.label.text == 'BT Bose') and (bt_cons[1] == False)) %}
                     {{ subfield(class="form-check-input", readonly=true) }}
                     {% else %}
                     {{ subfield(class="form-check-input") }}
