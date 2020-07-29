@@ -132,9 +132,10 @@ def radio_settings():
 def music():
     min_volume=0
     max_volume=10639
-    pcm_output_bt = '{\n\ttype bluealsa\n\tdevice "[MAC]"\n\tprofile "a2dp"\n}'
-    ctl_default_bt = '{\n\ttype bluealsa\n}'
-    pcm_output_card = '{\n\ttype hw\n\tcard 0\n}'
+    pcm_output_bt = 'pcm.output {\n\ttype bluealsa\n\tdevice "[MAC]"\n\tprofile "a2dp"\n}'
+    ctl_default_bt = 'ctl.!default {\n\ttype bluealsa\n}'
+    pcm_output_card = 'pcm.output {\n\ttype hw\n\tcard 0\n}'
+    ctl_default_card = 'ctl.!default {\n\ttype hw\n\tcard 0\n}'
     if request.method == 'GET':
         #get audio output
         process = subprocess.Popen(['amixer', 'cget', 'numid=3'], stdout=subprocess.PIPE)
@@ -147,8 +148,8 @@ def music():
         except:
             with open('/home/pi/.asoundrc', 'r') as file:
                 asound_content = file.read()
-            pcm_output = re.search('(?s)(?<=pcm.output )(.*?)(\})', asound_content).group()
-            ctl_default = re.search('(?s)(?<=ctl.!default )(.*?)(\})', asound_content).group()
+            pcm_output = re.search('(?s)(pcm.output )(.*?)(\})', asound_content).group()
+            ctl_default = re.search('(?s)(ctl.!default )(.*?)(\})', asound_content).group()
             asound_content = asound_content.replace(pcm_output, pcm_output_card)
             asound_content = asound_content.replace(ctl_default, pcm_output_card)
             with open('/home/pi/.asoundrc', 'w') as file:
@@ -220,8 +221,8 @@ def music():
         if audio_output is not None:
             with open('/home/pi/.asoundrc', 'r') as file:
                 asound_content = file.read()
-            pcm_output = re.search('(?s)(?<=pcm.output )(.*?)(\})', asound_content).group()
-            ctl_default = re.search('(?s)(?<=ctl.!default )(.*?)(\})', asound_content).group()
+            pcm_output = re.search('(?s)(pcm.output )(.*?)(\})', asound_content).group()
+            ctl_default = re.search('(?s)(ctl.!default )(.*?)(\})', asound_content).group()
             if audio_output in ['auto', 'box', 'hdmi']:
                 if audio_output=='auto':
                     audio_out_val=0
@@ -231,7 +232,7 @@ def music():
                     audio_out_val=2
                 if pcm_output != pcm_output_card:
                     asound_content = asound_content.replace(pcm_output, pcm_output_card)
-                    asound_content = asound_content.replace(ctl_default, pcm_output_card)
+                    asound_content = asound_content.replace(ctl_default, ctl_default_card)
                     with open('/home/pi/.asoundrc', 'w') as file:
                         file.write(asound_content)
                     try:
@@ -254,9 +255,9 @@ def music():
                     os.system('echo -e "connect {}\nquit" | sudo bluetoothctl'.format(bt_mac))
                     with open('/home/pi/.asoundrc', 'r') as file:
                         asound_content = file.read()
-                    pcm_output = re.search('(?s)(?<=pcm.output )(.*?)(\})', asound_content).group()
+                    pcm_output = re.search('(?s)(pcm.output )(.*?)(\})', asound_content).group()
                     print(pcm_output)
-                    ctl_default = re.search('(?s)(?<=ctl.!default )(.*?)(\})', asound_content).group()
+                    ctl_default = re.search('(?s)(ctl.!default )(.*?)(\})', asound_content).group()
                     print(ctl_default)
                     asound_content = asound_content.replace(pcm_output, pcm_new_output)
                     print(asound_content)
