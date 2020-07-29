@@ -31,6 +31,7 @@
             <p>Audioausgang</p>
             <form id="audioOutputForm">
                 {% for subfield in audio_output_form.audio_output %}
+                {{ subfield.value }}
                   <div class="form-check form-check-inline">
                     {% if ((subfield.value == 'bt_anker') and (bt_cons[0] == false)) or ((subfield.value == 'bt_bose') and (bt_cons[1] == false)) %}
                     {{ subfield(class="form-check-input", readonly=true) }}
