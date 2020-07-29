@@ -3,6 +3,7 @@ from flask import render_template, redirect, request, url_for, render_template_s
 from config import Config
 from data import Data
 from forms import SocketAssignmentForm, AudioOutputForm, RadioSettingsForm, RadioSelectionForm
+from helpers import get_pcm_and_ctl
 from py_crontab import update_timer_switches
 from time import sleep
 from werkzeug.datastructures import MultiDict
@@ -143,13 +144,19 @@ def music():
         audio_out_val_str = stdout.split(':')[-1]
         search_str = 'values='
         audio_out_val_ind=audio_out_val_str.find(search_str)+len(search_str)
+        bt_cons = list()
+        for bt_mac in ['00:E0:4C:7E:46:38', '2C:41:A1:2D:C7:51']:
+            bt_process = subprocess.Popen(['echo', f'"info {bt_mac}"', '|', 'sudo', 'bluetoothctl'], stdout=subprocess.PIPE)
+            bt_stdout = bt_process.communicate()[0].decode('utf-8')
+            if 'Connected: no' in bt_stdout:
+                bt_con = False
+            elif 'Connected: yes' in bt_stdout:
+                bt_con = True
+            bt_cons.append(bt_con)
         try:
             audio_out_val = audio_out_val_str[audio_out_val_ind]
         except:
-            with open('/home/pi/.asoundrc', 'r') as file:
-                asound_content = file.read()
-            pcm_output = re.search('(?s)(pcm.output )(.*?)(\})', asound_content).group()
-            ctl_default = re.search('(?s)(ctl.!default )(.*?)(\})', asound_content).group()
+            asound_content, pcm_output, ctl_default = get_pcm_and_ctl()
             asound_content = asound_content.replace(pcm_output, pcm_output_card)
             asound_content = asound_content.replace(ctl_default, pcm_output_card)
             with open('/home/pi/.asoundrc', 'w') as file:
@@ -199,7 +206,7 @@ def music():
             radio_station_form.radio.choices = [(x.lower(), x) for x in name_list]
 
 
-        return render_template('music.html', volume=volume, audio_output_form=audio_output_form, radio_station_form=radio_station_form, url_list=url_list)
+        return render_template('music.html', volume=volume, audio_output_form=audio_output_form, radio_station_form=radio_station_form, url_list=url_list, bt_cons=bt_cons)
     elif request.method == 'POST':
         volume = request.form.get('volume', None)
         audio_output = request.form.get('audio_output', None)
@@ -219,10 +226,7 @@ def music():
 
         
         if audio_output is not None:
-            with open('/home/pi/.asoundrc', 'r') as file:
-                asound_content = file.read()
-            pcm_output = re.search('(?s)(pcm.output )(.*?)(\})', asound_content).group()
-            ctl_default = re.search('(?s)(ctl.!default )(.*?)(\})', asound_content).group()
+            asound_content, pcm_output, ctl_default = get_pcm_and_ctl()
             if audio_output in ['auto', 'box', 'hdmi']:
                 if audio_output=='auto':
                     audio_out_val=0
@@ -252,19 +256,11 @@ def music():
                     bt_mac = '2C:41:A1:2D:C7:51'
                 pcm_new_output = pcm_output_bt.replace('[MAC]', bt_mac)
                 try:
-                    os.system('echo -e "connect {}\nquit" | sudo bluetoothctl'.format(bt_mac))
-                    with open('/home/pi/.asoundrc', 'r') as file:
-                        asound_content = file.read()
-                    pcm_output = re.search('(?s)(pcm.output )(.*?)(\})', asound_content).group()
-                    print(pcm_output)
-                    ctl_default = re.search('(?s)(ctl.!default )(.*?)(\})', asound_content).group()
-                    print(ctl_default)
+                    os.system('echo "connect {}" | sudo bluetoothctl'.format(bt_mac))
+                    asound_content, pcm_output, ctl_default = get_pcm_and_ctl()
                     asound_content = asound_content.replace(pcm_output, pcm_new_output)
-                    print(asound_content)
                     if ctl_default!=ctl_default_bt:
                         asound_content = asound_content.replace(ctl_default, ctl_default_bt)
-                        print(asound_content)
-                    print(asound_content)
                     with open('/home/pi/.asoundrc', 'w') as file:
                         file.write(asound_content)
                     try:
