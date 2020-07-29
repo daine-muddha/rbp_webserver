@@ -33,7 +33,7 @@
                 {% for subfield in audio_output_form.audio_output %}
                   <div class="form-check form-check-inline">
                     {% if ((subfield.label.text == 'BT Anker') and (bt_cons[0] == False)) or ((subfield.label.text == 'BT Bose') and (bt_cons[1] == False)) %}
-                    {{ subfield(class="form-check-input", readonly="true") }}
+                    {{ subfield(class="form-check-input", disabled=true) }}
                     {% else %}
                     {{ subfield(class="form-check-input") }}
                     {% endif %}
