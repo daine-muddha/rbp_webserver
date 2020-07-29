@@ -146,7 +146,8 @@ def music():
         audio_out_val_ind=audio_out_val_str.find(search_str)+len(search_str)
         bt_cons = list()
         for bt_mac in ['00:E0:4C:7E:46:38', '2C:41:A1:2D:C7:51']:
-            bt_process = subprocess.Popen(['echo', f'"info {bt_mac}"', '|', 'sudo', 'bluetoothctl'], stdout=subprocess.PIPE)
+            bt_input = f'info {bt_mac}'.encode('utf-8')
+            bt_process = subprocess.Popen(['sudo', 'bluetoothctl'], stdout=subprocess.PIPE, input=bt_input)
             bt_stdout = bt_process.communicate()[0].decode('utf-8')
             print(bt_stdout)
             if 'Connected: no' in bt_stdout:
