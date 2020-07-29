@@ -149,18 +149,18 @@ def music():
             bt_input = f'info {bt_mac}'.encode('utf-8')
             bt_process = subprocess.run(['sudo', 'bluetoothctl'], stdout=subprocess.PIPE, input=bt_input)
             bt_stdout = bt_process.stdout.decode('utf-8')
-            print(bt_stdout)
             if 'Connected: no' in bt_stdout:
                 bt_con = False
             elif 'Connected: yes' in bt_stdout:
                 bt_con = True
             bt_cons.append(bt_con)
+        print(bt_cons)
         try:
             audio_out_val = audio_out_val_str[audio_out_val_ind]
         except:
             asound_content, pcm_output, ctl_default = get_pcm_and_ctl()
             asound_content = asound_content.replace(pcm_output, pcm_output_card)
-            asound_content = asound_content.replace(ctl_default, pcm_output_card)
+            asound_content = asound_content.replace(ctl_default, ctl_default_card)
             with open('/home/pi/.asoundrc', 'w') as file:
                 file.write(asound_content)
             audio_out_val = '1'
