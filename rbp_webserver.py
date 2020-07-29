@@ -153,7 +153,7 @@ def music():
             asound_content = asound_content.replace(ctl_default, pcm_output_card)
             with open('/home/pi/.asoundrc', 'w') as file:
                 file.write(asound_content)
-            audio_out_val = '0'
+            audio_out_val = '1'
         audio_output=''
         alsa_scontrol = 'PCM'
         if audio_out_val=='0':
@@ -257,9 +257,12 @@ def music():
                     pcm_output = re.search('(?s)(?<=pcm.output )(.*?)(\})', asound_content).group()
                     print(pcm_output)
                     ctl_default = re.search('(?s)(?<=ctl.!default )(.*?)(\})', asound_content).group()
+                    print(ctl_default)
                     asound_content = asound_content.replace(pcm_output, pcm_new_output)
+                    print(asound_content)
                     if ctl_default!=ctl_default_bt:
                         asound_content = asound_content.replace(ctl_default, ctl_default_bt)
+                        print(asound_content)
                     print(asound_content)
                     with open('/home/pi/.asoundrc', 'w') as file:
                         file.write(asound_content)
