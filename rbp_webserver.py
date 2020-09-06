@@ -128,7 +128,7 @@ def radio_settings():
             data = render_template('radio_settings_form.html', form=form)
             return data
 
-
+"""
 @app.route('/music', methods=['GET', 'POST'])
 def music():
     min_volume=0
@@ -311,7 +311,7 @@ def raspbi_power():
                 return 'Not OK'
         else:
             return 'Not OK'
-
+"""
 @app.route('/ooops')
 def ooops():
     return render_template('ooops.html')
